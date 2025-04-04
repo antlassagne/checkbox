@@ -97,6 +97,21 @@ if [[ $CLONE != 0 ]]; then
     mkdir -p build && cd build
     cmake -DCMAKE_CUDA_ARCHITECTURES=native -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc -DCMAKE_LIBRARY_PATH=/usr/local/cuda/lib64/ -DCMAKE_INCLUDE_PATH=/usr/local/cuda/include ..
     make -j$(($(nproc) - 1))
+
+    # Copy resources that are required for specific tests.
+    if [[ $TEST_SET == 2 ]]; then
+        cp ${orig_dir}/${TEST_SET}/Samples/2_Concepts_and_Techniques/EGLStream_CUDA_Interop/*.yuv ${orig_dir}/${TEST_SET}/build/Samples/2_Concepts_and_Techniques/EGLStream_CUDA_Interop/bin/
+    fi
+
+    if [[ $TEST_SET == 8 ]]; then
+        mkdir -p ${orig_dir}/${TEST_SET}/build/Samples/8_Platform_Specific/Tegra/cudaNvSciBufMultiplanar/bin
+        cp ${orig_dir}/${TEST_SET}/Samples/8_Platform_Specific/Tegra/cudaNvSciBufMultiplanar/*.yuv ${orig_dir}/${TEST_SET}/build/Samples/8_Platform_Specific/Tegra/cudaNvSciBufMultiplanar/bin/
+    fi
+
+    if [[ $TEST_SET == 7 ]]; then
+        mkdir -p ${orig_dir}/${TEST_SET}/build/Samples/7_libNVVM/ptxgen/bin
+        cp ${orig_dir}/${TEST_SET}/Samples/7_libNVVM/ptxgen/*.ll ${orig_dir}/${TEST_SET}/build/Samples/7_libNVVM/ptxgen/bin/
+    fi
 fi
 
 #########################
@@ -107,7 +122,7 @@ if [[ $CUDA_IGNORE_TENSORCORE == 1 ]]; then
 fi
 
 if [[ $CUDA_MULTIGPU != 1 ]]; then
-    EXCLUDE_LIST_MULTIGPU="simpleCUFFT_MGPU simpleCUFFT_2d_MGPU conjugateGradientMultiDeviceCG"
+    EXCLUDE_LIST_MULTIGPU="simpleAttributesMPU simpleCUFFT_MGPU streamOrderedAllocationP2P simpleCUFFT_2d_MGPU conjugateGradientMultiDeviceCG"
 fi
 
 exclude_list="
@@ -119,6 +134,7 @@ $CUDA_IGNORE_TESTS
 #########################
 ### Run the tests
 ##############################
+set +x
 cd ${orig_dir}/${TEST_SET}/build/Samples
 file_list=($(find . -type f -path "./${TEST_SET}_*/*/bin/*" -executable))
 list_length=${#file_list[@]}
@@ -145,9 +161,12 @@ for ((index=0; index<list_length; index++)); do
     fi
 
     echo "Running: $exe in $exe_dir"
+    if [[ $exe_name == "ptxgen" ]]; then
+        exe_args=" test.ll"
+    fi
 
     cd "$exe_dir"  # Navigate to the executable's directory
-    "./$exe_name"  # Run the executable
+    ./${exe_name}${exe_args} # Run the executable
     cd ${orig_dir}/${TEST_SET}/build/Samples
 done
 
