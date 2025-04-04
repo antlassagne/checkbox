@@ -48,8 +48,8 @@ bootstrap_include:
 
 id: gpgpu-cuda-features
 unit: test plan
-_name: Feature testing for CUDA
-_description: Feature testing for CUDA
+_name: CUDA Feature testing
+_description: Feature testing for various CUDA versions
 include:
     gpgpu/cuda-samples-0-int      certification-status=non-blocker
     gpgpu/cuda-samples-1-utils      certification-status=non-blocker

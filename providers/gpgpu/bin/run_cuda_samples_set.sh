@@ -62,7 +62,7 @@ if [[ $CLONE != 0 ]]; then
         exit 1
     fi
 
-    echo "Cloning CUDA Samples $CUDA_SAMPLES_VERSION."
+    echo "Cloning CUDA Samples v${CUDA_SAMPLES_VERSION:-"12.8"}. Change the version in the manifest if you need another one."
 
     git clone -b v${CUDA_SAMPLES_VERSION:-"12.8"} --single-branch https://github.com/NVIDIA/cuda-samples.git $TEST_SET
 
