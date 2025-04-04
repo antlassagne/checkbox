@@ -101,6 +101,9 @@ if [[ $CLONE != 0 ]]; then
     # Copy resources that are required for specific tests.
     if [[ $TEST_SET == 2 ]]; then
         cp ${orig_dir}/${TEST_SET}/Samples/2_Concepts_and_Techniques/EGLStream_CUDA_Interop/*.yuv ${orig_dir}/${TEST_SET}/build/Samples/2_Concepts_and_Techniques/EGLStream_CUDA_Interop/bin/
+        
+        # because one nvidia-provided files is badly chmoded
+        chmod -x ${orig_dir}/${TEST_SET}/build/Samples/2_Concepts_and_Techniques/EGLStream_CUDA_Interop/bin/*.yuv
     fi
 
     if [[ $TEST_SET == 8 ]]; then
