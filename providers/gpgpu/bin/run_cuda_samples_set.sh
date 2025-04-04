@@ -47,7 +47,7 @@ if [[ -z "$1" || $1 == "-h" ]]; then
     exit 1
 fi
 
-set -x
+# set -x
 
 TEST_SET=$1
 orig_dir=$(pwd)
@@ -82,10 +82,10 @@ if [[ $CLONE != 0 ]]; then
             FOLDER_NUMBER=$(echo "$DIR" | cut -d'_' -f1)
 
             if [[ "$FOLDER_NUMBER" != "$TEST_SET" ]]; then
-                echo "Removing directory: $DIR"
+                # echo "Removing directory: $DIR"
                 rm -r "$DIR" 
                 # Remove the corresponding line from the CMakeLists.txt file
-                echo "Removing line for $DIR in CMakeLists.txt"
+                # echo "Removing line for $DIR in CMakeLists.txt"
                 sed -i "/add_subdirectory($DIR)/d" CMakeLists.txt
             else
                 echo "Keeping directory: $DIR"

@@ -9,7 +9,6 @@ plugin: shell
 estimated_duration: 4
 requires:
     graphics_card.vendor == 'NVIDIA Corporation'
-    manifest.has_rpi_camera == 'True'
 _summary: NVIDIA CUDA 0 - introduction
 command: run_cuda_samples_set.sh 0
 
